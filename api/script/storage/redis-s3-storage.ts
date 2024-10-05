@@ -14,7 +14,7 @@ import Promise = q.Promise;
 import { isPrototypePollutionKey } from "./storage";
 import path = require("path");
 import Redis from "ioredis";
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 function merge(original: any, updates: any): void {
   for (const property in updates) {
@@ -569,14 +569,26 @@ export class RedisS3Storage implements storage.Storage {
   }
 
   public removeBlob(blobId: string): Promise<void> {
-    const blobPath = this.blobs[blobId];
-    if (blobPath && fs.existsSync(blobPath)) {
-      fs.unlinkSync(blobPath);
-    }
-    delete this.blobs[blobId];
-    this.saveStateAsync();
+    const params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: blobId,
+    };
 
-    return q(<void>null);
+    return q
+      .Promise<void>((resolve, reject) => {
+        this.s3Client
+          .send(new DeleteObjectCommand(params))
+          .then(() => {
+            resolve();
+          })
+          .catch(reject);
+      })
+      .then(() => {
+        delete this.blobs[blobId];
+        this.saveStateAsync();
+
+        return q(<void>null);
+      });
   }
 
   public addAccessKey(accountId: string, accessKey: storage.AccessKey): Promise<string> {

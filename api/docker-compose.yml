@@ -7,9 +7,9 @@ services:
     ports:
       - "${REDIS_PORT:-6379}:6379"
     environment:
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-      - REDIS_KEY=${REDIS_KEY}
+      - REDIS_HOST=${REDIS_HOST_FOR_DOCKER}
+      - REDIS_PORT=${REDIS_PORT_FOR_DOCKER}
+      - REDIS_KEY=${REDIS_KEY_FOR_DOCKER}
     volumes:
       - redis-data:/data
 

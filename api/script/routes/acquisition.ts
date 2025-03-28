@@ -115,15 +115,11 @@ function createResponseUsingStorage(
 
 export function getHealthRouter(config: AcquisitionConfig): express.Router {
   const storage: storageTypes.Storage = config.storage;
-  const redisManager: redis.RedisManager = config.redisManager;
   const router: express.Router = express.Router();
 
   router.get("/health", (req: express.Request, res: express.Response, next: (err?: any) => void): any => {
     storage
       .checkHealth()
-      .then(() => {
-        return redisManager.checkHealth();
-      })
       .then(() => {
         res.status(200).send("Healthy");
       })

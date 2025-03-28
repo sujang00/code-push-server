@@ -14,7 +14,13 @@ sudo mkdir -p /usr/local/lib/docker/cli-plugins/
 sudo curl -SL "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose
 sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
-# for redis
+# for docker compose
+sudo docker compose up -d
+
+# for redis-cli
 sudo yum install -y gcc
 wget http://download.redis.io/redis-stable.tar.gz && tar xvzf redis-stable.tar.gz && cd redis-stable && make
 sudo cp src/redis-cli /usr/bin/
+
+# for pm2
+npm install -g pm2

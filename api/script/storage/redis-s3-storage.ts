@@ -486,9 +486,9 @@ export class RedisS3Storage implements storage.Storage {
       lastPackage.rollout = null;
     }
 
+    appPackage.releasedBy = this.accounts[accountId].email;
     deployment.packageHistory.push(appPackage);
     appPackage.label = "v" + deployment.packageHistory.length;
-    appPackage.releasedBy = this.accounts[accountId].email;
 
     this.saveStateAsync();
     return q(clone(appPackage));
